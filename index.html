@@ -2298,11 +2298,25 @@
           }
           
           console.log('Searching for title...');
-          courseTitle = findProperty(course, ['course_name', 'name', 'course_title', 'title', 'courseName', 'courseTitle']) || 'N/A';
+          // Try direct properties first
+          if (course.course_name) courseTitle = course.course_name;
+          else if (course.name) courseTitle = course.name;
+          else if (course.title) courseTitle = course.title;
+          else if (course.course && course.course.name) courseTitle = course.course.name;
+          else if (course.course && course.course.course_name) courseTitle = course.course.course_name;
+          else courseTitle = findProperty(course, ['course_name', 'name', 'course_title', 'title', 'courseName', 'courseTitle']) || 'N/A';
+          
           console.log('Searching for code...');
-          courseCode = findProperty(course, ['code', 'course_code', 'courseCode']) || '';
+          if (course.code) courseCode = course.code;
+          else if (course.course_code) courseCode = course.course_code;
+          else if (course.course && course.course.code) courseCode = course.course.code;
+          else courseCode = findProperty(course, ['code', 'course_code', 'courseCode']) || '';
+          
           console.log('Searching for credits...');
-          creditHours = findProperty(course, ['credit_hours', 'credits', 'creditHours']) || '';
+          if (course.credit_hours) creditHours = course.credit_hours;
+          else if (course.credits) creditHours = course.credits;
+          else if (course.course && course.course.credit_hours) creditHours = course.course.credit_hours;
+          else creditHours = findProperty(course, ['credit_hours', 'credits', 'creditHours']) || '';
           
           console.log('Final extracted - Code:', courseCode, 'Title:', courseTitle, 'Credits:', creditHours);
           
