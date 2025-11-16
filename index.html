@@ -2043,16 +2043,22 @@
       const questions = await loadQuestions();
       
       if (!questions) {
-        showBypassResult(container, false, courses.length, 0, courses.length);
+        console.error('Failed to load questions');
+        showBypassResult(container, false, courses.length, 0, courses.length, 'Failed to load evaluation questions');
         return;
       }
       
+      console.log('Loaded questions:', questions);
+      
       let successCount = 0;
       let failCount = 0;
+      let errors = [];
       
       // Process each course
       for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
+        
+        console.log('Processing course:', course.code, course.title);
         
         // Build evaluation data
         const evaluationData = [];
@@ -2100,27 +2106,39 @@
             evaluations: evaluationData
           };
           
+          console.log('Submitting payload for', course.code, ':', payload);
+          
           const result = await apiCall('/courses/evaluation', 'POST', payload);
+          
+          console.log('Result for', course.code, ':', result);
           
           if (result && (result.success || result.message === 'Evaluation submitted successfully')) {
             successCount++;
+            console.log('✅ Success for', course.code);
           } else {
             failCount++;
+            const errorMsg = result ? (result.error || result.message || 'Unknown error') : 'No response';
+            errors.push(course.code + ': ' + errorMsg);
+            console.error('❌ Failed for', course.code, ':', errorMsg);
           }
         } catch (error) {
           failCount++;
+          errors.push(course.code + ': ' + error.message);
+          console.error('❌ Error for', course.code, ':', error);
         }
         
         // Small delay to avoid overwhelming the API
         await new Promise(resolve => setTimeout(resolve, 300));
       }
       
+      console.log('Final results - Success:', successCount, 'Failed:', failCount);
+      
       // Show result
-      showBypassResult(container, true, courses.length, successCount, failCount);
+      showBypassResult(container, true, courses.length, successCount, failCount, errors.join('\n'));
     }
 
     // Show bypass result
-    function showBypassResult(container, success, total, successCount, failCount) {
+    function showBypassResult(container, success, total, successCount, failCount, errorDetails) {
       let html = '<div class="card">';
       html += '<div style="text-align: center; margin-bottom: 30px;">';
       
@@ -2143,7 +2161,13 @@
         html += '<line x1="9" y1="9" x2="15" y2="15" stroke-width="2"></line>';
         html += '</svg>';
         html += '<h2 class="card-title" style="color: var(--danger); margin-bottom: 16px;">Bypass Failed</h2>';
-        html += '<p style="color: var(--gray); font-size: 16px; margin-bottom: 30px;">Unable to complete the bypass process.</p>';
+        html += '<p style="color: var(--gray); font-size: 16px; margin-bottom: 20px;">Unable to complete the bypass process.</p>';
+        if (errorDetails) {
+          html += '<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: left;">';
+          html += '<p style="font-weight: 600; margin-bottom: 8px; color: #856404;">Error Details:</p>';
+          html += '<pre style="color: #856404; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; margin: 0;">' + errorDetails + '</pre>';
+          html += '</div>';
+        }
       }
       
       html += '</div>';
