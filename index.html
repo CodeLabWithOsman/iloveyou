@@ -1919,43 +1919,64 @@
       document.body.appendChild(loadingOverlay);
       
       try {
-        // Use html2canvas to capture the element with better settings
-        const canvas = await html2canvas(element, {
-          scale: 3,
+        // Clone the element to avoid modifying the original
+        const clonedElement = element.cloneNode(true);
+        
+        // Create a wrapper with proper styling
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'width: 100%; max-width: 100%; padding: 20px; box-sizing: border-box; background: white;';
+        wrapper.appendChild(clonedElement);
+        
+        // Temporarily add to body for html2canvas
+        wrapper.style.position = 'absolute';
+        wrapper.style.left = '-9999px';
+        document.body.appendChild(wrapper);
+        
+        // Use html2canvas to capture the element with optimized settings
+        const canvas = await html2canvas(wrapper, {
+          scale: 2,
           useCORS: true,
           logging: false,
           backgroundColor: '#ffffff',
           letterRendering: true,
           allowTaint: false,
-          foreignObjectRendering: false
+          foreignObjectRendering: false,
+          windowWidth: 1200,
+          windowHeight: wrapper.scrollHeight
         });
         
-        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        // Remove the temporary wrapper
+        document.body.removeChild(wrapper);
+        
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
         
         // Create PDF using jsPDF
         const { jsPDF } = window.jspdf;
+        
+        // Calculate proper dimensions for A4
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
         const pdf = new jsPDF({
-          orientation: 'portrait',
+          orientation: imgHeight > imgWidth ? 'portrait' : 'portrait',
           unit: 'mm',
           format: 'a4',
           compress: true
         });
         
-        const imgWidth = 190;
-        const pageHeight = 277;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
-        let position = 10;
+        let position = 0;
         
-        // Add image to PDF
-        pdf.addImage(imgData, 'JPEG', 10, position, imgWidth, imgHeight, '', 'FAST');
+        // Add first page
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST');
         heightLeft -= pageHeight;
         
-        // Add new pages if content is longer than one page
+        // Add additional pages if needed
         while (heightLeft > 0) {
-          position = heightLeft - imgHeight + 10;
+          position = heightLeft - imgHeight;
           pdf.addPage();
-          pdf.addImage(imgData, 'JPEG', 10, position, imgWidth, imgHeight, '', 'FAST');
+          pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST');
           heightLeft -= pageHeight;
         }
         
