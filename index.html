@@ -2099,16 +2099,15 @@
         
         // Submit evaluation
         try {
+          // Format: { answers: [...], class_id: "..." }
           const payload = {
-            academic_year: year,
-            semester: semester,
-            course_id: course.course_id,
-            evaluations: evaluationData
+            answers: evaluationData,
+            class_id: course.class_id
           };
           
           console.log('Submitting payload for', course.code, ':', payload);
           
-          const result = await apiCall('/courses/evaluation', 'POST', payload);
+          const result = await apiCall('/courses/evaluationadd', 'POST', payload);
           
           console.log('Result for', course.code, ':', result);
           
