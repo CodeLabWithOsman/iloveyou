@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GCTU SIP</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon_io/favicon-16x16.png">
+  <link rel="manifest" href="images/favicon_io/site.webmanifest">
+  <script src="https://kit.fontawesome.com/b75ac65de5.js" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -147,7 +152,23 @@
     .form-group {
       margin-bottom: 24px;
     }
+    .password {
+      position: relative;
+    }
+    #password {
+      padding-right: 48px;
+    }
     
+    .password i {
+      font-size: 18px;
+      position: absolute;
+      top: 70%;
+      right: 16px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--gray);
+      transition: color 0.3s;
+    }
     .form-group label {
       display: block;
       margin-bottom: 10px;
@@ -1084,8 +1105,11 @@
         </div>
         
         <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="password" placeholder="Enter your password" required>
+          <div class="password">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <i class="fa-solid fa-eye" id="togglePassword"></i>
+          </div>
         </div>
         
         <button type="submit" class="btn btn-primary" id="loginBtn">
@@ -1183,8 +1207,8 @@
       <div id="aboutView" class="view-content hidden">
         <div class="card">
           <div class="about-section">
-            <h2>About Developer</h2>
-            <div class="developer">TheNooB</div>
+            <h2>About Developers</h2>
+            <div class="developer">TheNooB & ThePrO</div>
             <p class="mission">Committed to making students' lives easier through innovative solutions</p>
           </div>
         </div>
@@ -1373,8 +1397,26 @@
     const navItems = document.querySelectorAll('.nav-item');
     const viewContents = document.querySelectorAll('.view-content');
 
-    // Show login alert (for login page)
-    function showLoginAlert(message, type) {
+    // Show password  functionality
+const passwordInput = document.getElementById('password');
+const toggleIcon = document.getElementById('togglePassword');
+function showPassword() {
+    passwordInput.setAttribute('type', 'text');
+    toggleIcon.classList.add('fa-eye-slash');
+    toggleIcon.classList.remove('fa-eye');
+}
+function hidePassword() {
+    passwordInput.setAttribute('type', 'password');
+    toggleIcon.classList.add('fa-eye');
+    toggleIcon.classList.remove('fa-eye-slash');
+}
+toggleIcon.addEventListener('mousedown', showPassword);
+toggleIcon.addEventListener('mouseup', hidePassword);
+toggleIcon.addEventListener('mouseout', hidePassword); 
+
+
+    // Show alert
+    function showAlert(message, type) {
       const alertClass = type === 'error' ? 'alert-error' : 'alert-success';
       loginAlert.innerHTML = '<div class="alert ' + alertClass + '">' + message + '</div>';
       setTimeout(function() {
