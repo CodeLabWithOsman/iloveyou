@@ -718,6 +718,17 @@
       transform: translateY(-2px);
     }
     
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-2px);
+    }
+    
     .about-section {
       text-align: center;
       padding: 60px 24px;
@@ -936,6 +947,141 @@
         padding: 0;
       }
     }
+    
+    /* Custom Dialog Styles */
+    .custom-dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    .custom-dialog {
+      background: white;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    
+    .custom-dialog-header {
+      padding: 30px 30px 20px;
+      text-align: center;
+    }
+    
+    .custom-dialog-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .custom-dialog-icon.warning {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+    }
+    
+    .custom-dialog-icon.error {
+      background: linear-gradient(135deg, #fee2e2, #fecaca);
+    }
+    
+    .custom-dialog-icon.success {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    }
+    
+    .custom-dialog-icon.info {
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    }
+    
+    .custom-dialog-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--dark);
+      margin: 0 0 12px 0;
+    }
+    
+    .custom-dialog-message {
+      font-size: 16px;
+      color: var(--gray);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0 10px;
+    }
+    
+    .custom-dialog-footer {
+      padding: 20px 30px 30px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    
+    .custom-dialog-footer .btn {
+      flex: 1;
+      max-width: 150px;
+    }
+    
+    @media (max-width: 768px) {
+      .custom-dialog {
+        margin: 20px;
+        max-width: calc(100% - 40px);
+      }
+      
+      .custom-dialog-header {
+        padding: 24px 24px 16px;
+      }
+      
+      .custom-dialog-icon {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .custom-dialog-title {
+        font-size: 20px;
+      }
+      
+      .custom-dialog-message {
+        font-size: 14px;
+      }
+      
+      .custom-dialog-footer {
+        padding: 16px 24px 24px;
+        flex-direction: column;
+      }
+      
+      .custom-dialog-footer .btn {
+        max-width: none;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -996,6 +1142,7 @@
       <div class="navbar-content" id="navbar">
         <div class="nav-item active" data-view="home">Home</div>
         <div class="nav-item" data-view="evaluate">Evaluate Lecturers</div>
+        <div class="nav-item" data-view="registration">Course Registration</div>
         <div class="nav-item" data-view="results">View Results</div>
         <div class="nav-item" data-view="about">About</div>
       </div>
@@ -1005,7 +1152,7 @@
       <!-- Home View -->
       <div id="homeView" class="view-content">
         <div class="card">
-          <h2 class="card-title">Welcome to GCTU SIP Evaluation</h2>
+          <h2 class="card-title" id="welcomeTitle">Welcome to GCTU SIP Evaluation</h2>
           <p class="card-subtitle">Streamline your lecturer evaluations for Academic Year 2025/2026</p>
           
           <div class="grid">
@@ -1015,6 +1162,14 @@
               </svg>
               <h3>Evaluate Lecturers</h3>
               <p>Evaluate all pending lecturers or select specific courses</p>
+            </div>
+            
+            <div class="action-card" style="background: linear-gradient(135deg, #10b981, #059669);" data-action="registration">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <h3>Course Registration</h3>
+              <p>View and register for your courses</p>
             </div>
             
             <div class="action-card" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);" data-action="results">
@@ -1044,7 +1199,10 @@
       
       <!-- Results View -->
       <div id="resultsView" class="view-content hidden"></div>
-      
+
+      <!-- Registration View -->
+      <div id="registrationView" class="view-content hidden"></div>
+
       <!-- About View -->
       <div id="aboutView" class="view-content hidden">
         <div class="card">
@@ -1064,7 +1222,82 @@
     let authToken = localStorage.getItem('authToken') || null;
     let evaluationQuestions = null;
     let currentCourses = [];
+    let userName = localStorage.getItem('userName') || null;
     let commonAnswers = [];
+    
+    // Custom Dialog Functions
+    function showCustomDialog(options) {
+      return new Promise(function(resolve) {
+        const overlay = document.createElement('div');
+        overlay.className = 'custom-dialog-overlay';
+        
+        const iconSvg = {
+          warning: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>',
+          error: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+          success: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>',
+          info: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+        };
+        
+        let buttonsHTML = '';
+        if (options.buttons) {
+          options.buttons.forEach(function(btn) {
+            const btnClass = btn.primary ? 'btn-primary' : (btn.type === 'danger' ? 'btn-danger' : 'btn-secondary');
+            buttonsHTML += '<button class="btn ' + btnClass + '" data-action="' + btn.action + '">' + btn.text + '</button>';
+          });
+        }
+        
+        overlay.innerHTML = '<div class="custom-dialog">' +
+          '<div class="custom-dialog-header">' +
+            '<div class="custom-dialog-icon ' + (options.type || 'info') + '">' +
+              (iconSvg[options.type] || iconSvg.info) +
+            '</div>' +
+            '<h3 class="custom-dialog-title">' + (options.title || 'Alert') + '</h3>' +
+            '<p class="custom-dialog-message">' + (options.message || '') + '</p>' +
+          '</div>' +
+          '<div class="custom-dialog-footer">' + buttonsHTML + '</div>' +
+        '</div>';
+        
+        document.body.appendChild(overlay);
+        
+        // Add click handlers
+        overlay.querySelectorAll('.btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            const action = this.getAttribute('data-action');
+            document.body.removeChild(overlay);
+            resolve(action);
+          });
+        });
+        
+        // Click outside to close
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay) {
+            document.body.removeChild(overlay);
+            resolve(null);
+          }
+        });
+      });
+    }
+    
+    function showAlert(message, title, type) {
+      return showCustomDialog({
+        title: title || 'Alert',
+        message: message,
+        type: type || 'info',
+        buttons: [{ text: 'OK', action: 'ok', primary: true }]
+      });
+    }
+    
+    function showConfirm(message, title) {
+      return showCustomDialog({
+        title: title || 'Confirm',
+        message: message,
+        type: 'warning',
+        buttons: [
+          { text: 'No', action: 'no', type: 'secondary' },
+          { text: 'Yes', action: 'yes', primary: true }
+        ]
+      });
+    }
     
     // Check if we have a saved token on page load
     window.addEventListener('DOMContentLoaded', function() {
@@ -1082,6 +1315,8 @@
           console.log('Token is valid, auto-logging in...');
           loginScreen.style.display = 'none';
           appScreen.classList.add('active');
+          // Fetch and display user name
+          fetchAndDisplayUserName();
         } else {
           console.log('Token expired, clearing...');
           authToken = null;
@@ -1091,6 +1326,62 @@
         console.log('Token validation failed:', error);
         authToken = null;
         localStorage.removeItem('authToken');
+      }
+    }
+    
+    // Fetch and display user name from results
+    async function fetchAndDisplayUserName() {
+      if (userName) {
+        // Already have cached name
+        updateWelcomeMessage(userName);
+        return;
+      }
+      
+      try {
+        // Try to fetch user name from results
+        const result = await apiCall('/courses/results?page=1&limit=1', 'GET');
+        
+        if (result && result.isHtml && result.html) {
+          // Parse HTML to extract name
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(result.html, 'text/html');
+          
+          // Look for name in common patterns
+          const namePatterns = [
+            /Name:\s*([^<\n]+)/i,
+            /Student Name:\s*([^<\n]+)/i,
+            /<strong>Name:<\/strong>\s*([^<\n]+)/i
+          ];
+          
+          for (let pattern of namePatterns) {
+            const match = result.html.match(pattern);
+            if (match && match[1]) {
+              userName = match[1].trim();
+              localStorage.setItem('userName', userName);
+              updateWelcomeMessage(userName);
+              return;
+            }
+          }
+          
+          // Try to find from table cells or divs
+          const textContent = doc.body.textContent || doc.body.innerText || '';
+          const nameMatch = textContent.match(/Name:\s*(.+?)(?:\n|Student ID)/i);
+          if (nameMatch && nameMatch[1]) {
+            userName = nameMatch[1].trim();
+            localStorage.setItem('userName', userName);
+            updateWelcomeMessage(userName);
+          }
+        }
+      } catch (error) {
+        console.log('Could not fetch user name:', error);
+        // Not critical, just use generic greeting
+      }
+    }
+    
+    function updateWelcomeMessage(name) {
+      const welcomeTitle = document.getElementById('welcomeTitle');
+      if (welcomeTitle && name) {
+        welcomeTitle.textContent = 'Welcome, ' + name + '!';
       }
     }
 
@@ -1155,10 +1446,26 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         const response = await fetch(API_BASE + endpoint, options);
         console.log('Response status:', response.status, response.statusText);
         
-        // Handle 401 Unauthorized
+        // Handle 401 Unauthorized - token expired
         if (response.status === 401) {
           console.error('Unauthorized - token expired or invalid');
-          return { error: 'Unauthorized - Please login again', status: 401 };
+          
+          // Clear invalid token and force re-login
+          authToken = null;
+          localStorage.removeItem('authToken');
+          
+          // Show login screen with message
+          loginScreen.style.display = 'flex';
+          appScreen.classList.remove('active');
+          showAlert('Your session has expired. Please login again.', 'Session Expired', 'warning');
+          
+          return null;
+        }
+        
+        // Handle 404 for enrollment - likely not eligible
+        if (response.status === 404 && endpoint.includes('/courses/enroll/')) {
+          console.error('404 - Not eligible for enrollment');
+          return { error: 'not_eligible' };
         }
         
         const contentType = response.headers.get('content-type');
@@ -1202,18 +1509,66 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         console.log('Login successful! Token saved:', authToken);
         loginScreen.style.display = 'none';
         appScreen.classList.add('active');
+        
+        // Fetch user name and show greeting
+        fetchUserNameAndGreet();
       } else {
-        showAlert('Login failed. Please check your credentials.', 'error');
+        showLoginAlert('Login failed. Please check your credentials.', 'error');
       }
 
       loginBtn.disabled = false;
       loginBtn.innerHTML = '<span>Login to System</span>';
     });
+    
+    // Fetch user name from results and show greeting
+    async function fetchUserNameAndGreet() {
+      try {
+        // Try to fetch results to extract name
+        const result = await apiCall('/courses/results?page=1&limit=10&export=print', 'GET');
+        
+        if (result && result.isHtml && result.html) {
+          // Parse HTML to extract name
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(result.html, 'text/html');
+          
+          // Look for Name: field in the HTML (common pattern: "Name: Mr/Mrs/Miss ... ")
+          const nameMatch = result.html.match(/Name:\s*<\/td>\s*<td[^>]*>\s*([^<]+)/i);
+          if (nameMatch && nameMatch[1]) {
+            userName = nameMatch[1].trim();
+            localStorage.setItem('userName', userName);
+            console.log('Extracted user name:', userName);
+            // Update welcome title
+            updateWelcomeMessage(userName);
+          }
+        }
+        
+        // Show greeting
+        if (userName) {
+          await showCustomDialog({
+            title: 'Welcome Back!',
+            message: 'Hello ' + userName + '! Welcome to GCTU SIP Evaluation System. We\'re glad to have you here.',
+            type: 'success',
+            buttons: [{ text: 'Let\'s Start', action: 'ok', primary: true }]
+          });
+        }
+      } catch (error) {
+        console.log('Could not fetch user name:', error);
+        // Show generic greeting if name fetch fails
+        await showCustomDialog({
+          title: 'Welcome Back!',
+          message: 'Welcome to GCTU SIP Evaluation System. You have successfully logged in!',
+          type: 'success',
+          buttons: [{ text: 'Continue', action: 'ok', primary: true }]
+        });
+      }
+    }
 
     // Logout handler
     logoutBtn.addEventListener('click', function() {
       authToken = null;
+      userName = null;
       localStorage.removeItem('authToken');
+      localStorage.removeItem('userName');
       console.log('Logged out, token cleared');
       loginScreen.style.display = 'flex';
       appScreen.classList.remove('active');
@@ -1261,6 +1616,9 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       } else if (view === 'evaluate') {
         document.getElementById('evaluateView').classList.remove('hidden');
         loadEvaluateOptions();
+      } else if (view === 'registration') {
+        document.getElementById('registrationView').classList.remove('hidden');
+        loadRegistrationView();
       } else if (view === 'results') {
         document.getElementById('resultsView').classList.remove('hidden');
         loadResultsView();
@@ -1387,33 +1745,9 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       });
     }
 
-    // Display course list
+    // Display course list (no longer needed - going straight to bypass)
     function displayCourseList(container, courses, year, semester, isAll) {
-      let html = '<div class="card"><h2 class="card-title">Pending Evaluations (' + courses.length + ')</h2>';
-      html += '<p class="card-subtitle">Review lecturers awaiting evaluation for ' + year + ' Semester ' + semester + '</p>';
-      
-      html += '<div class="stats-grid"><div class="stat-card"><div class="stat-value">' + courses.length + '</div><div class="stat-label">Pending</div></div></div>';
-      
-      html += '<div class="course-list">';
-
-      courses.forEach(function(course, idx) {
-        html += '<div class="course-item">';
-        html += '<div class="course-header">';
-        html += '<div><div class="course-code">' + course.code + '</div>';
-        html += '<div class="course-title">' + course.title + '</div>';
-        html += '<div class="course-lecturer">Lecturer: ' + course.staff_fullname + '</div></div>';
-        html += '<span class="badge badge-warning">Not Evaluated</span></div></div>';
-      });
-
-      html += '</div>';
-      html += '<div class="btn-group"><button class="btn btn-secondary" onclick="switchView(\'home\')">Cancel</button>';
-      html += '<button class="btn btn-success" id="startEvalBtn">Start Evaluation</button></div></div>';
-
-      container.innerHTML = html;
-
-      document.getElementById('startEvalBtn').addEventListener('click', function() {
-        startEvaluationProcess(container, courses, year, semester);
-      });
+      // This function is now deprecated - bypass happens directly from the main screen
     }
 
     // Display selectable courses
@@ -1446,7 +1780,7 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         });
 
         if (selected.length === 0) {
-          alert('Please select at least one course');
+          showAlert('Please select at least one course to evaluate.', 'No Course Selected', 'warning');
           return;
         }
 
@@ -1724,7 +2058,7 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         html += '<button class="btn btn-secondary" onclick="switchView(\'home\')">Back to Home</button>';
         html += '</div>';
         html += '<div id="printableResults" style="overflow-x: auto;">' + htmlContent + '</div>';
-        html += '<style>#printableResults table { font-size: 14px !important; } #printableResults th { font-size: 15px !important; padding: 10px !important; } #printableResults td { font-size: 14px !important; padding: 10px !important; } #printableResults h1 { font-size: 22px !important; } #printableResults h2 { font-size: 20px !important; } #printableResults h3 { font-size: 18px !important; } #printableResults h4, #printableResults h5, #printableResults h6 { font-size: 16px !important; }</style>';
+        html += '<style>#printableResults table { font-size: 18px !important; } #printableResults th { font-size: 19px !important; padding: 12px !important; } #printableResults td { font-size: 18px !important; padding: 12px !important; } #printableResults h1 { font-size: 28px !important; } #printableResults h2 { font-size: 26px !important; } #printableResults h3 { font-size: 24px !important; } #printableResults h4, #printableResults h5, #printableResults h6 { font-size: 20px !important; } #printableResults p, #printableResults small { font-size: 16px !important; }</style>';
         html += '</div>';
         container.innerHTML = html;
         return;
@@ -1844,6 +2178,601 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       container.innerHTML = html;
     }
 
+    // ====================
+    // COURSE REGISTRATION
+    // ====================
+    
+    // Load Registration View
+    async function loadRegistrationView() {
+      const container = document.getElementById('registrationView');
+      container.innerHTML = '<div class="card"><h2 class="card-title">Loading courses...</h2></div>';
+      
+      const data = await apiCall('/courses/index/', 'GET');
+      
+      console.log('Registration data received:', data);
+      console.log('Type of data:', typeof data, 'Is Array:', Array.isArray(data));
+      console.log('Has semesterCourseList:', !!data?.semesterCourseList, 'Length:', data?.semesterCourseList?.length);
+      
+      if (!data) {
+        return; // Token expired, handled by apiCall
+      }
+      
+      // Handle both JSON and HTML responses
+      if (data.html && data.isHtml) {
+        // HTML response - parse it
+        displayCoursesFromHTML(container, data.html);
+      } else if (data && data.semesterCourseList) {
+        // Handle the actual API response structure
+        displayCoursesListWithRegistration(container, data);
+      } else if (data && Array.isArray(data)) {
+        displayCoursesList(container, data);
+      } else if (data && data.courses) {
+        displayCoursesList(container, data.courses);
+      } else {
+        container.innerHTML = '<div class="card"><h2 class="card-title">No Courses Found</h2><p>No courses available for registration.</p><button class="btn btn-secondary" onclick="switchView(\'home\')">Back to Home</button></div>';
+      }
+    }
+    
+    // Display courses from HTML
+    function displayCoursesFromHTML(container, htmlContent) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      
+      // Try multiple table selectors
+      let rows = doc.querySelectorAll('table tbody tr');
+      if (rows.length === 0) {
+        rows = doc.querySelectorAll('table tr');
+      }
+      
+      console.log('Found', rows.length, 'rows in HTML');
+      
+      const courses = [];
+      rows.forEach(function(row, index) {
+        const cells = row.querySelectorAll('td');
+        
+        // Skip header rows
+        if (cells.length === 0) {
+          const headers = row.querySelectorAll('th');
+          if (headers.length > 0) {
+            console.log('Skipping header row', index);
+            return;
+          }
+        }
+        
+        if (cells.length >= 3) {
+          const actionCell = cells[cells.length - 1];
+          const links = actionCell.querySelectorAll('a');
+          let classId = '';
+          let status = 'Not Registered';
+          
+          console.log('Row', index, 'cells:', cells.length, 'action cell:', actionCell.innerHTML);
+          
+          // Check for register link
+          links.forEach(function(link) {
+            const href = link.getAttribute('href') || '';
+            const text = link.textContent.trim().toLowerCase();
+            
+            console.log('Link:', text, 'href:', href);
+            
+            if (text.includes('register') && !text.includes('registered')) {
+              const match = href.match(/\/courses\/enroll\/([^/?]+)/);
+              if (match) {
+                classId = match[1];
+                status = 'Not Registered';
+                console.log('Found register link, classId:', classId);
+              }
+            } else if (text.includes('registered') || text === 'view' || href.includes('registered')) {
+              status = 'Registered';
+              console.log('Course is registered');
+            }
+          });
+          
+          // If no links but cell contains "Registered" text
+          if (!classId && actionCell.textContent.trim().toLowerCase().includes('registered')) {
+            status = 'Registered';
+          }
+          
+          const course = {
+            code: cells[0].textContent.trim(),
+            title: cells[1].textContent.trim(),
+            credit_hours: cells[2] ? cells[2].textContent.trim() : '',
+            status: status,
+            class_id: classId || ''
+          };
+          
+          console.log('Parsed course:', course);
+          courses.push(course);
+        }
+      });
+      
+      console.log('Total courses parsed:', courses.length);
+      
+      if (courses.length > 0) {
+        displayCoursesList(container, courses);
+      } else {
+        container.innerHTML = '<div class="card"><h2 class="card-title">No Courses Found</h2><p>No courses available for registration.</p></div>';
+      }
+    }
+    
+    // Display courses from registration data structure
+    function displayCoursesListWithRegistration(container, data) {
+      const allCourses = [];
+      
+      console.log('Processing registration data:', data);
+      
+      // Process semester courses
+      if (data.semesterCourseList && Array.isArray(data.semesterCourseList)) {
+        console.log('Processing', data.semesterCourseList.length, 'semester courses');
+        data.semesterCourseList.forEach(function(course, idx) {
+          console.log('=== Semester course', idx, '===');
+          console.log('Full object keys:', Object.keys(course));
+          console.log('course.course exists?', !!course.course);
+          if (course.course) {
+            console.log('course.course keys:', Object.keys(course.course));
+          }
+          
+          // The course structure can be: {class_id, course_id, course: {code, name, ...}}
+          // Or it could be flat: {class_id, code, name, ...}
+          const courseObj = course.course || course;
+          
+          // Try all possible property names for title - be more aggressive
+          let courseTitle = null;
+          let courseCode = null;
+          let creditHours = null;
+          
+          // Search recursively for title/name
+          function findProperty(obj, possibleNames) {
+            if (!obj) return null;
+            for (let prop of possibleNames) {
+              if (obj[prop]) {
+                console.log('Found', prop, '=', obj[prop]);
+                return obj[prop];
+              }
+            }
+            // Check nested objects
+            for (let key in obj) {
+              if (obj[key] && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+                let result = findProperty(obj[key], possibleNames);
+                if (result) return result;
+              }
+            }
+            return null;
+          }
+          
+          console.log('Searching for title...');
+          // Try direct properties first
+          if (course.course_name) courseTitle = course.course_name;
+          else if (course.name) courseTitle = course.name;
+          else if (course.title) courseTitle = course.title;
+          else if (course.course && course.course.name) courseTitle = course.course.name;
+          else if (course.course && course.course.course_name) courseTitle = course.course.course_name;
+          else courseTitle = findProperty(course, ['course_name', 'name', 'course_title', 'title', 'courseName', 'courseTitle']) || 'N/A';
+          
+          console.log('Searching for code...');
+          if (course.code) courseCode = course.code;
+          else if (course.course_code) courseCode = course.course_code;
+          else if (course.course && course.course.code) courseCode = course.course.code;
+          else courseCode = findProperty(course, ['code', 'course_code', 'courseCode']) || '';
+          
+          console.log('Searching for credits...');
+          if (course.credit_hours) creditHours = course.credit_hours;
+          else if (course.credits) creditHours = course.credits;
+          else if (course.course && course.course.credit_hours) creditHours = course.course.credit_hours;
+          else creditHours = findProperty(course, ['credit_hours', 'credits', 'creditHours']) || '';
+          
+          console.log('Final extracted - Code:', courseCode, 'Title:', courseTitle, 'Credits:', creditHours);
+          
+          // Use 'id' field for semester courses, 'class_id' for enrolled courses
+          const enrollId = course.id || course.class_id || course.classId || courseObj.id || courseObj.class_id || courseObj.classId || '';
+          console.log('Using enrollment ID:', enrollId);
+          
+          allCourses.push({
+            code: courseCode,
+            title: courseTitle,
+            credit_hours: creditHours,
+            class_id: enrollId,
+            status: 'Not Registered'
+          });
+        });
+      }
+      
+      // Mark enrolled courses as registered
+      if (data.enrolledCoueseList && Array.isArray(data.enrolledCoueseList)) {
+        data.enrolledCoueseList.forEach(function(enrolled) {
+          console.log('Enrolled course full object:', JSON.stringify(enrolled, null, 2));
+          const courseObj = enrolled.course || enrolled;
+          
+          // Search recursively for properties
+          function findProperty(obj, possibleNames) {
+            if (!obj) return null;
+            for (let prop of possibleNames) {
+              if (obj[prop]) return obj[prop];
+            }
+            // Check nested objects
+            for (let key in obj) {
+              if (obj[key] && typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
+                let result = findProperty(obj[key], possibleNames);
+                if (result) return result;
+              }
+            }
+            return null;
+          }
+          
+          let courseTitle = findProperty(enrolled, ['course_name', 'name', 'course_title', 'title', 'courseName', 'courseTitle']) || 'N/A';
+          let courseCode = findProperty(enrolled, ['code', 'course_code', 'courseCode']) || '';
+          
+          const course = allCourses.find(c => c.class_id === (enrolled.class_id || enrolled.classId));
+          if (course) {
+            course.status = 'Registered';
+            // Update title if not set properly
+            if (course.title === 'N/A' && courseTitle !== 'N/A') {
+              course.title = courseTitle;
+            }
+            if (course.code === '' && courseCode !== '') {
+              course.code = courseCode;
+            }
+          } else {
+            // Add enrolled course if not in semester list
+            allCourses.push({
+              code: courseCode,
+              title: courseTitle,
+              credit_hours: findProperty(enrolled, ['credit_hours', 'credits', 'creditHours']) || '',
+              class_id: enrolled.class_id || enrolled.classId || '',
+              status: 'Registered'
+            });
+          }
+        });
+      }
+      
+      console.log('Processed courses:', allCourses);
+      
+      if (allCourses.length > 0) {
+        displayCoursesList(container, allCourses);
+      } else {
+        container.innerHTML = '<div class="card"><h2 class="card-title">No Courses Found</h2><p>No courses available for registration.</p></div>';
+      }
+    }
+    
+    // Display courses list
+    function displayCoursesList(container, courses) {
+      const registered = courses.filter(c => c.status === 'Registered' || c.status === '1' || c.status === 1);
+      const notRegistered = courses.filter(c => c.status !== 'Registered' && c.status !== '1' && c.status !== 1);
+      
+      let html = '<div class="card">';
+      html += '<h2 class="card-title">Course Registration</h2>';
+      html += '<p class="card-subtitle">Manage your course registrations</p>';
+      
+      html += '<div class="stats-grid" style="margin: 30px 0;">';
+      html += '<div class="stat-card"><div class="stat-value">' + courses.length + '</div><div class="stat-label">Total Courses</div></div>';
+      html += '<div class="stat-card"><div class="stat-value" style="color: var(--success);">' + registered.length + '</div><div class="stat-label">Registered</div></div>';
+      html += '<div class="stat-card"><div class="stat-value" style="color: var(--danger);">' + notRegistered.length + '</div><div class="stat-label">Not Registered</div></div>';
+      html += '</div>';
+      
+      if (notRegistered.length > 0) {
+        html += '<div style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">';
+        html += '<button class="btn btn-primary" id="registerAllBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>Register All Courses</button>';
+        html += '<button class="btn btn-success" id="viewRegistrationBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Print/Download</button>';
+        html += '</div>';
+      } else {
+        html += '<div style="margin-bottom: 24px;">';
+        html += '<button class="btn btn-success" id="viewRegistrationBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Print/Download</button>';
+        html += '</div>';
+      }
+      
+      html += '<table style="width: 100%; border-collapse: collapse; margin-top: 20px;">';
+      html += '<thead style="background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white;">';
+      html += '<tr><th style="padding: 18px; text-align: left; font-weight: 700; font-size: 15px; text-transform: uppercase;">Course Code</th>';
+      html += '<th style="padding: 18px; text-align: left; font-weight: 700; font-size: 15px; text-transform: uppercase;">Course Title</th>';
+      html += '<th style="padding: 18px; text-align: left; font-weight: 700; font-size: 15px; text-transform: uppercase;">Credits</th>';
+      html += '<th style="padding: 18px; text-align: center; font-weight: 700; font-size: 15px; text-transform: uppercase;">Status</th>';
+      html += '<th style="padding: 18px; text-align: center; font-weight: 700; font-size: 15px; text-transform: uppercase;">Action</th></tr>';
+      html += '</thead><tbody>';
+      
+      courses.forEach(function(course, index) {
+        const isRegistered = course.status === 'Registered' || course.status === '1' || course.status === 1;
+        const statusBadge = isRegistered
+          ? '<span style="background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: var(--success); padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 13px;">Registered</span>'
+          : '<span style="background: linear-gradient(135deg, #fee, #fcc); color: var(--danger); padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 13px;">Not Registered</span>';
+        
+        const actionBtn = isRegistered
+          ? '<span style="color: var(--gray); font-size: 13px;">-</span>'
+          : '<button class="btn btn-sm btn-primary" onclick="registerSingleCourse(\'' + course.class_id + '\', ' + index + ')">Register</button>';
+        
+        html += '<tr style="border-bottom: 1px solid var(--border);">';
+        html += '<td style="padding: 16px; font-weight: 600; color: var(--primary);">' + (course.code || 'N/A') + '</td>';
+        html += '<td style="padding: 16px;">' + (course.title || course.name || 'N/A') + '</td>';
+        html += '<td style="padding: 16px;">' + (course.credit_hours || course.credits || 'N/A') + '</td>';
+        html += '<td style="padding: 16px; text-align: center;">' + statusBadge + '</td>';
+        html += '<td style="padding: 16px; text-align: center;">' + actionBtn + '</td>';
+        html += '</tr>';
+      });
+      
+      html += '</tbody></table></div>';
+      
+      container.innerHTML = html;
+      
+      // Attach event listeners
+      if (notRegistered.length > 0) {
+        document.getElementById('registerAllBtn').addEventListener('click', function() {
+          registerAllCourses(container, notRegistered);
+        });
+      }
+      
+      const viewBtn = document.getElementById('viewRegistrationBtn');
+      if (viewBtn) {
+        viewBtn.addEventListener('click', function() {
+          loadRegistrationPrintView(container);
+        });
+      }
+    }
+    
+    // Register single course
+    async function registerSingleCourse(classId, index) {
+      // Show loading
+      const loadingPromise = showAlert('Registering course, please wait...', 'Processing', 'info');
+      
+      const result = await apiCall('/courses/enroll/' + classId + '?label=Register', 'GET');
+      
+      // Close all loading dialogs immediately
+      const overlays = document.querySelectorAll('.custom-dialog-overlay');
+      overlays.forEach(function(overlay) {
+        if (overlay && overlay.parentNode) {
+          document.body.removeChild(overlay);
+        }
+      });
+      
+      if (result && result.error === 'not_eligible') {
+        // User hasn't paid - show eligibility dialog immediately
+        // Use requestAnimationFrame to ensure DOM is clean before showing new dialog
+        requestAnimationFrame(function() {
+          showCustomDialog({
+            title: 'Enrollment Requirements Not Met',
+            message: 'You currently do not meet the eligibility criteria for course enrollment in the current semester. To proceed with course enrollment, kindly ensure that you have made a payment of at least 50% of your school fees to fulfill the enrollment requirements.',
+            type: 'warning',
+            buttons: [{ text: 'I Understand', action: 'ok', primary: true }]
+          });
+        });
+      } else if (result && result.status === 'Success') {
+        await showAlert('Course registered successfully!', 'Success', 'success');
+        loadRegistrationView(); // Reload
+      } else {
+        // Any other error - also check if it might be eligibility
+        requestAnimationFrame(function() {
+          showCustomDialog({
+            title: 'Enrollment Requirements Not Met',
+            message: 'You currently do not meet the eligibility criteria for course enrollment in the current semester. To proceed with course enrollment, kindly ensure that you have made a payment of at least 50% of your school fees to fulfill the enrollment requirements.',
+            type: 'warning',
+            buttons: [{ text: 'I Understand', action: 'ok', primary: true }]
+          });
+        });
+      }
+    }
+    
+    // Register all courses
+    async function registerAllCourses(container, courses) {
+      container.innerHTML = '<div class="card"><h2 class="card-title">Registering Courses...</h2><p class="card-subtitle">Please wait while we register your courses</p><div style="margin: 40px 0; text-align: center;"><div style="width: 100px; height: 100px; border: 6px solid #e0e0e0; border-top: 6px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 30px;"></div><p style="font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 10px;">Processing ' + courses.length + ' courses...</p></div></div><style>@keyframes spin { to { transform: rotate(360deg); }}</style>';
+      
+      let success = 0;
+      let failed = 0;
+      let notEligible = false;
+      
+      for (let i = 0; i < courses.length; i++) {
+        const course = courses[i];
+        
+        try {
+          const result = await apiCall('/courses/enroll/' + course.class_id + '?label=Register', 'GET');
+          
+          if (result && result.error === 'not_eligible') {
+            notEligible = true;
+            failed++;
+          } else if (result && result.status === 'Success') {
+            success++;
+          } else {
+            failed++;
+          }
+        } catch (error) {
+          failed++;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      // Show results
+      if (notEligible) {
+        // Clear the container first
+        container.innerHTML = '';
+        
+        // Show custom dialog for eligibility issue immediately
+        setTimeout(function() {
+          showCustomDialog({
+            title: 'Enrollment Requirements Not Met',
+            message: 'You currently do not meet the eligibility criteria for course enrollment in the current semester. To proceed with course enrollment, kindly ensure that you have made a payment of at least 50% of your school fees to fulfill the enrollment requirements.',
+            type: 'warning',
+            buttons: [{ text: 'I Understand', action: 'ok', primary: true }]
+          });
+        }, 0);
+        loadRegistrationView(); // Reload to show current state
+        return;
+      }
+      
+      let html = '<div class="card">';
+      html += '<div style="text-align: center; margin-bottom: 30px;">';
+      
+      if (success > 0) {
+        html += '<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: var(--success); margin-bottom: 20px;">';
+        html += '<circle cx="12" cy="12" r="10" stroke-width="2"></circle>';
+        html += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />';
+        html += '</svg>';
+        html += '<h2 class="card-title" style="color: var(--success); margin-bottom: 16px;">Registration Successful!</h2>';
+        html += '<p style="color: var(--gray); font-size: 16px; margin-bottom: 30px;">Your courses have been registered successfully.</p>';
+      } else {
+        html += '<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: var(--danger); margin-bottom: 20px;">';
+        html += '<circle cx="12" cy="12" r="10" stroke-width="2"></circle>';
+        html += '<line x1="15" y1="9" x2="9" y2="15" stroke-width="2"></line>';
+        html += '<line x1="9" y1="9" x2="15" y2="15" stroke-width="2"></line>';
+        html += '</svg>';
+        html += '<h2 class="card-title" style="color: var(--danger); margin-bottom: 16px;">Registration Failed</h2>';
+        html += '<p style="color: var(--gray); font-size: 16px; margin-bottom: 30px;">Unable to register courses.</p>';
+      }
+      
+      html += '</div>';
+      
+      html += '<div class="stats-grid">';
+      html += '<div class="stat-card"><div class="stat-value">' + courses.length + '</div><div class="stat-label">Total</div></div>';
+      html += '<div class="stat-card"><div class="stat-value" style="color: var(--success);">' + success + '</div><div class="stat-label">Registered</div></div>';
+      if (failed > 0) {
+        html += '<div class="stat-card"><div class="stat-value" style="color: var(--danger);">' + failed + '</div><div class="stat-label">Failed</div></div>';
+      }
+      html += '</div>';
+      
+      html += '<div style="margin-top: 30px; display: flex; gap: 12px; justify-content: center;">';
+      html += '<button class="btn btn-primary" onclick="loadRegistrationView()">View Registration</button>';
+      html += '<button class="btn btn-secondary" onclick="switchView(\'home\')">Back to Home</button>';
+      html += '</div></div>';
+      
+      container.innerHTML = html;
+    }
+    
+    // Load print view for registration
+    async function loadRegistrationPrintView(container) {
+      container.innerHTML = '<div class="card"><h2 class="card-title">Loading preview...</h2></div>';
+
+      const htmlData = await apiCall('/courses/index/?export=print', 'GET');
+
+      if (!htmlData) {
+        return;
+      }
+
+      if (htmlData.html) {
+        // Store the original HTML for PDF generation
+        window.registrationOriginalHTML = htmlData.html;
+        
+        // HTML response - display with minimal wrapper
+        let html = '<div class="card">';
+        html += '<div style="margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap;" class="no-print">';
+        html += '<button class="btn btn-success" onclick="downloadRegistrationPDF()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/></svg>Download PDF</button>';
+        html += '<button class="btn btn-primary" onclick="printRegistration()"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Print</button>';
+        html += '<button class="btn btn-secondary" onclick="loadRegistrationView()">Back</button>';
+        html += '</div>';
+        
+        // Add print styles
+        html += '<style>';
+        html += '@media print { ';
+        html += '  .no-print, .btn { display: none !important; }';
+        html += '  body { margin: 0; padding: 0; background: white; }';
+        html += '  .card { border: none !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; background: white !important; }';
+        html += '  @page { margin: 10mm; size: A4; }';
+        html += '}';
+        html += '</style>';
+        
+        // Add the original HTML content directly
+        html += '<div id="printableRegistration">' + htmlData.html + '</div>';
+        html += '</div>';
+
+        container.innerHTML = html;
+      } else {
+        container.innerHTML = '<div class="card"><h2 class="card-title">Preview Not Available</h2><p>Unable to load registration preview.</p><button class="btn btn-secondary" onclick="loadRegistrationView()">Back</button></div>';
+      }
+    }
+    
+    // Print registration function
+    window.printRegistration = function() {
+      window.print();
+    };
+    
+    // Download registration as PDF
+    window.downloadRegistrationPDF = async function() {
+      const element = document.getElementById('printableRegistration');
+
+      if (!element || !window.registrationOriginalHTML) {
+        showAlert('No content available to download. Please try again.', 'Download Failed', 'error');
+        return;
+      }
+
+      // Show loading indicator
+      const loadingOverlay = document.createElement('div');
+      loadingOverlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+      loadingOverlay.innerHTML = '<div style="background: white; padding: 40px 50px; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"><div style="width: 60px; height: 60px; border: 4px solid #e0e0e0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div><p style="color: var(--dark); font-weight: 700; font-size: 18px; margin-bottom: 8px;">Generating PDF...</p><p style="color: var(--gray); font-size: 14px;">Please wait a moment</p></div><style>@keyframes spin { to { transform: rotate(360deg); }}</style>';
+      document.body.appendChild(loadingOverlay);
+
+      try {
+        // Create a wrapper with the original HTML
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position: fixed; left: -9999px; top: 0; width: 1200px; padding: 40px; box-sizing: border-box; background: white;';
+        wrapper.innerHTML = window.registrationOriginalHTML;
+        document.body.appendChild(wrapper);
+
+        // Wait for rendering
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        // Capture with html2canvas
+        const canvas = await html2canvas(wrapper, {
+          scale: 2.5,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          windowWidth: 1200,
+          windowHeight: wrapper.scrollHeight,
+          onclone: function(clonedDoc) {
+            const cloned = clonedDoc.body.querySelector('div');
+            if (cloned) {
+              cloned.style.left = '0';
+              cloned.style.position = 'relative';
+              
+              // Increase font sizes for better PDF readability
+              const allElements = cloned.querySelectorAll('*');
+              allElements.forEach(function(el) {
+                const computedStyle = window.getComputedStyle(el);
+                if (computedStyle.fontSize) {
+                  const currentSize = parseFloat(computedStyle.fontSize);
+                  el.style.fontSize = (currentSize * 1.35) + 'px'; // Increase by 35%
+                }
+              });
+            }
+          }
+        });
+
+        // Remove wrapper
+        document.body.removeChild(wrapper);
+
+        // Create PDF
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pdfHeight;
+        }
+
+        pdf.save('Course_Registration_' + new Date().toISOString().split('T')[0] + '.pdf');
+      } catch (error) {
+        console.error('PDF generation error:', error);
+        showAlert('Failed to generate PDF. Please try using the Print button instead.', 'PDF Generation Failed', 'error');
+      } finally {
+        document.body.removeChild(loadingOverlay);
+      }
+    };
+
+    window.loadRegistrationView = loadRegistrationView;
+    window.registerSingleCourse = registerSingleCourse;
+
     // Load Evaluate Options (new unified entry point)
     async function loadEvaluateOptions() {
       const container = document.getElementById('evaluateView');
@@ -1875,30 +2804,43 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       html += '<div class="form-group"><label>Semester</label><select id="semesterSelectEval" class="form-group input">';
       html += '<option value="1">Semester 1</option><option value="2">Semester 2</option></select></div>';
       html += '<div class="btn-group">';
-      html += '<button class="btn btn-primary" id="evalAllBtn">Evaluate All Lecturers</button>';
-      html += '<button class="btn btn-success" id="evalSelectBtn">Select Specific Courses</button>';
+      html += '<button class="btn btn-success" id="bypassAllBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>Bypass Evaluation</button>';
+      html += '<button class="btn btn-primary" id="evalSelectBtn">Select Specific Courses</button>';
       html += '</div></div>';
 
       container.innerHTML = html;
 
-      document.getElementById('evalAllBtn').addEventListener('click', async function() {
+      document.getElementById('bypassAllBtn').addEventListener('click', async function() {
         const year = document.getElementById('yearSelectEval').value;
         const semester = document.getElementById('semesterSelectEval').value;
         
         if (year === '2025/2026') {
-          alert('Evaluations for 2025/2026 academic year are not yet available. Please select a previous year.');
+          showAlert('Evaluations for the 2025/2026 academic year are not yet available. Please select a previous year to evaluate lecturers.', 'Evaluation Not Available', 'info');
           return;
         }
         
+        this.disabled = true;
+        this.innerHTML = '<div class="spinner"></div><span>Loading...</span>';
+        
         const courses = await loadCourses(year, semester);
+        
+        // Check if token expired (courses will be null)
+        if (!courses) {
+          this.disabled = false;
+          this.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>Bypass Evaluation';
+          return;
+        }
+        
         const unevaluated = courses.filter(function(c) {
           return c.evaluation_status !== '1' && c.evaluation_status !== 1;
         });
 
         if (unevaluated.length === 0) {
+          this.disabled = false;
+          this.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>Bypass Evaluation';
           showAllComplete(container, courses, year, semester);
         } else {
-          displayCourseList(container, unevaluated, year, semester, true);
+          showBypassConfirmDialog(container, unevaluated, year, semester);
         }
       });
 
@@ -1907,11 +2849,17 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         const semester = document.getElementById('semesterSelectEval').value;
         
         if (year === '2025/2026') {
-          alert('Evaluations for 2025/2026 academic year are not yet available. Please select a previous year.');
+          showAlert('Evaluations for the 2025/2026 academic year are not yet available. Please select a previous year to evaluate lecturers.', 'Evaluation Not Available', 'info');
           return;
         }
         
         const courses = await loadCourses(year, semester);
+        
+        // Check if token expired (courses will be null)
+        if (!courses) {
+          return;
+        }
+        
         const unevaluated = courses.filter(function(c) {
           return c.evaluation_status !== '1' && c.evaluation_status !== 1;
         });
@@ -1950,7 +2898,7 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       const element = document.getElementById('printableResults');
       
       if (!element) {
-        alert('No results to download. Please try again.');
+        showAlert('No results available to download. Please try again.', 'Download Failed', 'error');
         return;
       }
       
@@ -1960,23 +2908,23 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       loadingOverlay.innerHTML = '<div style="background: white; padding: 40px 50px; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"><div style="width: 60px; height: 60px; border: 4px solid #e0e0e0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div><p style="color: var(--dark); font-weight: 700; font-size: 18px; margin-bottom: 8px;">Generating PDF...</p><p style="color: var(--gray); font-size: 14px;">Please wait a moment</p></div><style>@keyframes spin { to { transform: rotate(360deg); }}</style>';
       document.body.appendChild(loadingOverlay);
       
+      let wrapper = null;
+      
       try {
         // Clone the element to avoid modifying the original
         const clonedElement = element.cloneNode(true);
         
         // Create a wrapper with proper styling
-        const wrapper = document.createElement('div');
-        wrapper.style.cssText = 'width: 100%; max-width: 100%; padding: 20px; box-sizing: border-box; background: white;';
+        wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position: absolute; left: -9999px; top: 0; width: 1200px; padding: 20px; box-sizing: border-box; background: white; opacity: 0; pointer-events: none;';
         wrapper.appendChild(clonedElement);
         
         // Temporarily add to body for html2canvas
-        wrapper.style.position = 'absolute';
-        wrapper.style.left = '-9999px';
         document.body.appendChild(wrapper);
         
-        // Use html2canvas to capture the element with optimized settings
+        // Use html2canvas to capture the element with higher quality
         const canvas = await html2canvas(wrapper, {
-          scale: 2,
+          scale: 3,
           useCORS: true,
           logging: false,
           backgroundColor: '#ffffff',
@@ -1984,13 +2932,37 @@ toggleIcon.addEventListener('mouseout', hidePassword);
           allowTaint: false,
           foreignObjectRendering: false,
           windowWidth: 1200,
-          windowHeight: wrapper.scrollHeight
+          windowHeight: wrapper.scrollHeight,
+          imageTimeout: 0,
+          removeContainer: false,
+          onclone: function(clonedDoc) {
+            const clonedWrapper = clonedDoc.body.querySelector('div');
+            if (clonedWrapper) {
+              // Ensure colors are preserved and increase font sizes
+              const allElements = clonedWrapper.querySelectorAll('*');
+              allElements.forEach(function(el) {
+                const computedStyle = window.getComputedStyle(el);
+                if (computedStyle.color) el.style.color = computedStyle.color;
+                if (computedStyle.backgroundColor) el.style.backgroundColor = computedStyle.backgroundColor;
+                if (computedStyle.borderColor) el.style.borderColor = computedStyle.borderColor;
+                
+                // Increase font sizes for better PDF readability
+                if (computedStyle.fontSize) {
+                  const currentSize = parseFloat(computedStyle.fontSize);
+                  el.style.fontSize = (currentSize * 1.35) + 'px'; // Increase by 35%
+                }
+              });
+            }
+          }
         });
         
-        // Remove the temporary wrapper
-        document.body.removeChild(wrapper);
+        // Remove the temporary wrapper immediately
+        if (wrapper && wrapper.parentNode) {
+          document.body.removeChild(wrapper);
+          wrapper = null;
+        }
         
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const imgData = canvas.toDataURL('image/png', 1.0);
         
         // Create PDF using jsPDF
         const { jsPDF } = window.jspdf;
@@ -2001,7 +2973,7 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         const pdf = new jsPDF({
-          orientation: imgHeight > imgWidth ? 'portrait' : 'portrait',
+          orientation: 'portrait',
           unit: 'mm',
           format: 'a4',
           compress: true
@@ -2010,15 +2982,15 @@ toggleIcon.addEventListener('mouseout', hidePassword);
         let heightLeft = imgHeight;
         let position = 0;
         
-        // Add first page
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST');
+        // Add first page with PNG for better color
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
         heightLeft -= pageHeight;
         
         // Add additional pages if needed
         while (heightLeft > 0) {
           position = heightLeft - imgHeight;
           pdf.addPage();
-          pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight, '', 'FAST');
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, '', 'FAST');
           heightLeft -= pageHeight;
         }
         
@@ -2033,15 +3005,227 @@ toggleIcon.addEventListener('mouseout', hidePassword);
           loadingOverlay.style.opacity = '0';
           loadingOverlay.style.transition = 'opacity 0.3s';
           setTimeout(function() {
-            document.body.removeChild(loadingOverlay);
+            if (loadingOverlay.parentNode) {
+              document.body.removeChild(loadingOverlay);
+            }
           }, 300);
         }, 500);
         
       } catch (error) {
         console.error('PDF generation error:', error);
-        document.body.removeChild(loadingOverlay);
-        alert('Failed to generate PDF. Please try using the Print button instead.');
+        // Clean up wrapper if it still exists
+        if (wrapper && wrapper.parentNode) {
+          document.body.removeChild(wrapper);
+        }
+        if (loadingOverlay.parentNode) {
+          document.body.removeChild(loadingOverlay);
+        }
+        showAlert('Failed to generate PDF. Please try using the Print button instead.', 'PDF Generation Failed', 'error');
       }
+    }
+
+    // Show bypass confirmation dialog
+    function showBypassConfirmDialog(container, courses, year, semester) {
+      // Create modal overlay
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.3s;';
+      
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = 'background: white; border-radius: 16px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s;';
+      
+      modalContent.innerHTML = `
+        <style>
+          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        </style>
+        <div style="text-align: center;">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: var(--warning); margin-bottom: 20px;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--dark);">Bypass Evaluation</h2>
+          <p style="color: var(--gray); font-size: 16px; margin-bottom: 12px;">This will mark all <strong>${courses.length} lecturers</strong> as evaluated.</p>
+          <p style="color: var(--gray); font-size: 16px; margin-bottom: 30px;">Continue?</p>
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button id="cancelBypass" class="btn btn-secondary" style="min-width: 120px;">No</button>
+            <button id="confirmBypass" class="btn btn-success" style="min-width: 120px;">Yes</button>
+          </div>
+        </div>
+      `;
+      
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+      
+      document.getElementById('cancelBypass').addEventListener('click', function() {
+        document.body.removeChild(modal);
+      });
+      
+      document.getElementById('confirmBypass').addEventListener('click', function() {
+        document.body.removeChild(modal);
+        bypassAllEvaluations(container, courses, year, semester);
+      });
+    }
+
+    // Bypass all evaluations
+    async function bypassAllEvaluations(container, courses, year, semester) {
+      // Show progress
+      let html = '<div class="card">';
+      html += '<h2 class="card-title">Bypassing Evaluations</h2>';
+      html += '<p class="card-subtitle">Please wait while we process...</p>';
+      html += '<div style="margin: 40px 0; text-align: center;">';
+      html += '<div style="width: 100px; height: 100px; border: 6px solid #e0e0e0; border-top: 6px solid var(--success); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 30px;"></div>';
+      html += '<p style="font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 10px;">Processing ' + courses.length + ' courses...</p>';
+      html += '<p style="color: var(--gray); font-size: 14px;">This may take a moment</p>';
+      html += '</div></div>';
+      html += '<style>@keyframes spin { to { transform: rotate(360deg); }}</style>';
+      
+      container.innerHTML = html;
+      
+      // Load questions
+      const questions = await loadQuestions();
+      
+      if (!questions) {
+        console.error('Failed to load questions');
+        showBypassResult(container, false, courses.length, 0, courses.length, 'Failed to load evaluation questions');
+        return;
+      }
+      
+      console.log('Loaded questions:', questions);
+      
+      let successCount = 0;
+      let failCount = 0;
+      let errors = [];
+      
+      // Process each course
+      for (let i = 0; i < courses.length; i++) {
+        const course = courses[i];
+        
+        console.log('Processing course:', course.code, course.title);
+        
+        // Build evaluation data
+        const evaluationData = [];
+        
+        questions.forEach(function(category) {
+          const catData = {
+            questions_type: category.questions_type,
+            questions: []
+          };
+          
+          category.questions.forEach(function(q) {
+            const isLecturerName = q.question.indexOf('name of the lecturer') !== -1 || q.question.indexOf('Provide the name') !== -1;
+            const isComment = q.question.indexOf('Mention at least') !== -1 || q.question.indexOf('What factors') !== -1 || q.question.indexOf('What challenges') !== -1 || q.question.indexOf('obstacles') !== -1 || q.question.indexOf('Given another chance') !== -1 || q.question.indexOf('recommendations') !== -1;
+            
+            let answer = '';
+            
+            if (isLecturerName) {
+              answer = course.staff_fullname || '';
+            } else if (isComment) {
+              answer = 'Good';
+            } else if (q.question.indexOf('level of participation') !== -1 || q.question.indexOf('level of preparation') !== -1) {
+              answer = '80%';
+            } else if (q.question.indexOf('would you want to have another course') !== -1) {
+              answer = 'Yes';
+            } else {
+              answer = 'Good';
+            }
+            
+            catData.questions.push({
+              question_id: q.question_id,
+              question: q.question,
+              answer: answer
+            });
+          });
+          
+          evaluationData.push(catData);
+        });
+        
+        // Submit evaluation
+        try {
+          // Format: { answers: [...], class_id: "..." }
+          const payload = {
+            answers: evaluationData,
+            class_id: course.class_id
+          };
+          
+          console.log('Submitting payload for', course.code, ':', payload);
+          
+          const result = await apiCall('/courses/evaluationadd', 'POST', payload);
+          
+          console.log('Result for', course.code, ':', result);
+          
+          // Success if we got an evaluation_id back
+          if (result && result.evaluation_id) {
+            successCount++;
+            console.log('✅ Success for', course.code);
+          } else {
+            failCount++;
+            const errorMsg = result ? (result.error || result.message || 'Unknown error') : 'No response';
+            errors.push(course.code + ': ' + errorMsg);
+            console.error('❌ Failed for', course.code, ':', errorMsg);
+          }
+        } catch (error) {
+          failCount++;
+          errors.push(course.code + ': ' + error.message);
+          console.error('❌ Error for', course.code, ':', error);
+        }
+        
+        // Small delay to avoid overwhelming the API
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+      
+      console.log('Final results - Success:', successCount, 'Failed:', failCount);
+      
+      // Show result
+      showBypassResult(container, true, courses.length, successCount, failCount, errors.join('\n'));
+    }
+
+    // Show bypass result
+    function showBypassResult(container, success, total, successCount, failCount, errorDetails) {
+      let html = '<div class="card">';
+      html += '<div style="text-align: center; margin-bottom: 30px;">';
+      
+      if (success && successCount > 0) {
+        html += '<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: var(--success); margin-bottom: 20px;">';
+        html += '<circle cx="12" cy="12" r="10" stroke-width="2"></circle>';
+        html += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4" />';
+        html += '</svg>';
+        html += '<h2 class="card-title" style="color: var(--success); margin-bottom: 16px;">Bypassed Successfully!</h2>';
+        html += '<p style="color: var(--gray); font-size: 16px; margin-bottom: 30px;">All evaluations have been marked as complete.</p>';
+        html += '<div style="background: var(--light); border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: left;">';
+        html += '<p style="font-weight: 600; margin-bottom: 12px; font-size: 16px;">✅ Verification Required</p>';
+        html += '<p style="color: var(--gray); margin-bottom: 16px;">Please verify the evaluations have been recorded:</p>';
+        html += '<a href="https://gctusip.gctu.edu.gh" target="_blank" class="btn btn-primary" style="width: 100%; text-decoration: none; display: inline-block; text-align: center;">Open GCTU SIP Portal</a>';
+        html += '</div>';
+      } else {
+        html += '<svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: var(--danger); margin-bottom: 20px;">';
+        html += '<circle cx="12" cy="12" r="10" stroke-width="2"></circle>';
+        html += '<line x1="15" y1="9" x2="9" y2="15" stroke-width="2"></line>';
+        html += '<line x1="9" y1="9" x2="15" y2="15" stroke-width="2"></line>';
+        html += '</svg>';
+        html += '<h2 class="card-title" style="color: var(--danger); margin-bottom: 16px;">Bypass Failed</h2>';
+        html += '<p style="color: var(--gray); font-size: 16px; margin-bottom: 20px;">Unable to complete the bypass process.</p>';
+        if (errorDetails) {
+          html += '<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 8px; text-align: left;">';
+          html += '<p style="font-weight: 600; margin-bottom: 8px; color: #856404;">Error Details:</p>';
+          html += '<pre style="color: #856404; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; margin: 0;">' + errorDetails + '</pre>';
+          html += '</div>';
+        }
+      }
+      
+      html += '</div>';
+      
+      html += '<div class="stats-grid">';
+      html += '<div class="stat-card"><div class="stat-value">' + total + '</div><div class="stat-label">Total Courses</div></div>';
+      if (success) {
+        html += '<div class="stat-card"><div class="stat-value" style="color: var(--success);">' + successCount + '</div><div class="stat-label">Completed</div></div>';
+        if (failCount > 0) {
+          html += '<div class="stat-card"><div class="stat-value" style="color: var(--danger);">' + failCount + '</div><div class="stat-label">Failed</div></div>';
+        }
+      }
+      html += '</div>';
+      
+      html += '<button class="btn btn-primary" onclick="switchView(\'home\')" style="margin-top: 24px;">Back to Home</button></div>';
+      
+      container.innerHTML = html;
     }
   </script>
 </body>
