@@ -335,6 +335,10 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
     }
+
+    .home-link {
+      text-decoration: none;
+    }
     
     .hamburger {
       display: none;
@@ -977,10 +981,12 @@
   <div id="appScreen" class="app-wrapper">
     <div class="header">
       <div class="header-content">
-        <div class="header-title">
-          <img src="https://cdn.corenexis.com/files/b/5229968168.png" alt="GCTU" class="header-logo">
-          GCTU SIP Evaluation
-        </div>
+        <a href="#" id="homeLink" class="home-link">
+          <div class="header-title">
+            <img src="https://cdn.corenexis.com/files/b/5229968168.png" alt="GCTU" class="header-logo">
+            GCTU SIP Evaluation
+          </div>
+        </a>
         <div class="header-actions">
           <div class="hamburger" id="hamburger">
             <span></span>
@@ -1109,20 +1115,30 @@
     // Show password  functionality
 const passwordInput = document.getElementById('password');
 const toggleIcon = document.getElementById('togglePassword');
-function showPassword() {
-    passwordInput.setAttribute('type', 'text');
-    toggleIcon.classList.add('fa-eye-slash');
-    toggleIcon.classList.remove('fa-eye');
-}
-function hidePassword() {
-    passwordInput.setAttribute('type', 'password');
-    toggleIcon.classList.add('fa-eye');
-    toggleIcon.classList.remove('fa-eye-slash');
-}
-toggleIcon.addEventListener('mousedown', showPassword);
-toggleIcon.addEventListener('mouseup', hidePassword);
-toggleIcon.addEventListener('mouseout', hidePassword); 
 
+if(passwordInput && toggleIcon){
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+        this.classList.toggle('fa-eye');
+
+        passwordInput.focus();
+    });
+    
+    togglePassword.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+    });
+
+    togglePassword.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye-slash');
+        togglePassword.classList.toggle('fa-eye');
+        passwordInput.focus();
+    });
+}
 
     // Show alert
     function showAlert(message, type) {
@@ -1220,6 +1236,18 @@ toggleIcon.addEventListener('mouseout', hidePassword);
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
     });
+
+    //Back to home 
+function setupHomeLink() {
+    const homeLink = document.getElementById('homeLink');
+    if (homeLink) {
+        homeLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            switchView('home');
+        });
+    }
+}
+setupHomeLink();
 
     // Hamburger menu
     hamburger.addEventListener('click', function() {
